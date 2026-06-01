@@ -1,0 +1,91 @@
+class Node {
+    int transactionId;
+    String customer;
+    double amount;
+    Node left, right;
+
+    Node(int id, String customer, double amount) {
+        this.transactionId = id;
+        this.customer = customer;
+        this.amount = amount;
+        left = right = null;
+    }
+}
+
+class BST {
+    Node root;
+
+    // Insert
+    Node insert(Node root, int id, String customer, double amount) {
+        if (root == null)
+            return new Node(id, customer, amount);
+
+        if (id < root.transactionId)
+            root.left = insert(root.left, id, customer, amount);
+        else if (id > root.transactionId)
+            root.right = insert(root.right, id, customer, amount);
+
+        return root;
+    }
+
+    // Search
+    Node search(Node root, int id) {
+        if (root == null || root.transactionId == id)
+            return root;
+
+        if (id < root.transactionId)
+            return search(root.left, id);
+
+        return search(root.right, id);
+    }
+
+    // Inorder Traversal
+    void inorder(Node root) {
+        if (root != null) {
+            inorder(root.left);
+            System.out.println("ID: " + root.transactionId +
+                    " Customer: " + root.customer +
+                    " Amount: Rs." + root.amount);
+            inorder(root.right);
+        }
+    }
+
+    // Fraud Detection
+    void detectFraud(Node root) {
+        if (root != null) {
+            detectFraud(root.left);
+
+            if (root.amount > 50000)
+                System.out.println("Fraud Alert -> ID: "
+                        + root.transactionId +
+                        " Amount: Rs." + root.amount);
+
+            detectFraud(root.right);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        BST bst = new BST();
+
+        bst.root = bst.insert(bst.root, 101, "Rahul", 15000);
+        bst.root = bst.insert(bst.root, 205, "Priya", 80000);
+        bst.root = bst.insert(bst.root, 150, "Arjun", 25000);
+        bst.root = bst.insert(bst.root, 300, "Sneha", 120000);
+
+        System.out.println("Transactions:");
+        bst.inorder(bst.root);
+
+        System.out.println("\nSearch Transaction ID 205:");
+        Node n = bst.search(bst.root, 205);
+
+        if (n != null)
+            System.out.println("Found: " + n.customer +
+                    " Rs." + n.amount);
+
+        System.out.println("\nFraud Detection:");
+        bst.detectFraud(bst.root);
+    }
+}

@@ -1,0 +1,86 @@
+import java.util.ArrayList;
+import java.util.Collections;
+
+class BPlusTreeNode {
+    ArrayList<Integer> keys;
+    ArrayList<String> values;
+    boolean isLeaf;
+
+    BPlusTreeNode() {
+        keys = new ArrayList<>();
+        values = new ArrayList<>();
+        isLeaf = true;
+    }
+}
+
+class BPlusTree {
+    BPlusTreeNode root;
+
+    BPlusTree() {
+        root = new BPlusTreeNode();
+    }
+
+    // Insert Record
+    void insert(int accountId, String customerName) {
+        root.keys.add(accountId);
+        root.values.add(customerName);
+
+        // Keep keys sorted
+        for (int i = 0; i < root.keys.size() - 1; i++) {
+            for (int j = i + 1; j < root.keys.size(); j++) {
+
+                if (root.keys.get(i) > root.keys.get(j)) {
+
+                    int tempKey = root.keys.get(i);
+                    root.keys.set(i, root.keys.get(j));
+                    root.keys.set(j, tempKey);
+
+                    String tempValue = root.values.get(i);
+                    root.values.set(i, root.values.get(j));
+                    root.values.set(j, tempValue);
+                }
+            }
+        }
+    }
+
+    // Search Record
+    String search(int accountId) {
+
+        for (int i = 0; i < root.keys.size(); i++) {
+            if (root.keys.get(i) == accountId) {
+                return root.values.get(i);
+            }
+        }
+
+        return "Account Not Found";
+    }
+
+    // Display Records
+    void display() {
+        System.out.println("Bank Records:");
+
+        for (int i = 0; i < root.keys.size(); i++) {
+            System.out.println(
+                    "Account ID: " + root.keys.get(i)
+                    + " Customer: " + root.values.get(i));
+        }
+    }
+}
+
+public class Main {
+
+    public static void main(String[] args) {
+
+        BPlusTree tree = new BPlusTree();
+
+        tree.insert(1001, "Rahul");
+        tree.insert(1005, "Priya");
+        tree.insert(1003, "Arjun");
+        tree.insert(1008, "Sneha");
+
+        tree.display();
+
+        System.out.println("\nSearch Result:");
+        System.out.println(tree.search(1005));
+    }
+}
